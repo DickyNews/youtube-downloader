@@ -6,74 +6,106 @@
     <title>UltraHD 8K Downloader V2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
 <body class="bg-black text-white min-h-screen flex items-center justify-center p-4">
 
     <div class="max-w-xl w-full bg-zinc-900 rounded-3xl shadow-2xl overflow-hidden border border-zinc-800">
         <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-center">
-            <h1 class="text-2xl font-black tracking-tighter">ULTRA DOWNLOADER 8K</h1>
-            <p class="text-blue-100 text-[10px] uppercase tracking-widest">Premium Quality Stream Grabber</p>
+            <h1 class="text-2xl font-black tracking-tighter italic">ULTRA DOWNLOADER 8K</h1>
+            <p class="text-blue-100 text-[10px] uppercase tracking-widest opacity-80">Direct One-Click Stream Grabber</p>
         </div>
 
         <div class="p-8">
-            <input type="text" id="videoUrl" placeholder="Tempel link YouTube di sini..." 
-                class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-5 py-4 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm mb-6">
+            <div class="relative mb-6">
+                <input type="text" id="videoUrl" placeholder="Tempel link YouTube di sini..." 
+                    class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-5 py-4 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm pr-12 text-zinc-200">
+                <button onclick="pasteLink()" class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition">
+                    <i class="fa-regular fa-paste"></i>
+                </button>
+            </div>
 
             <div class="space-y-6">
                 <div>
                     <label class="text-[10px] font-bold text-zinc-500 uppercase ml-1">Video Resolution</label>
                     <div class="grid grid-cols-2 gap-3 mt-2">
-                        <button onclick="dl('8k')" class="bg-zinc-800 hover:bg-blue-600 p-3 rounded-xl text-sm font-bold border border-zinc-700 transition">8K UHD</button>
-                        <button onclick="dl('4k')" class="bg-zinc-800 hover:bg-blue-600 p-3 rounded-xl text-sm font-bold border border-zinc-700 transition">4K UHD</button>
-                        <button onclick="dl('1080')" class="bg-zinc-800 hover:bg-zinc-700 p-3 rounded-xl text-sm border border-zinc-700 transition">1080p</button>
-                        <button onclick="dl('720')" class="bg-zinc-800 hover:bg-zinc-700 p-3 rounded-xl text-sm border border-zinc-700 transition">720p</button>
+                        <button onclick="download('1080')" class="bg-zinc-800 hover:bg-blue-600 p-3 rounded-xl text-sm font-bold border border-zinc-700 transition active:scale-95">1080p Full HD</button>
+                        <button onclick="download('720')" class="bg-zinc-800 hover:bg-zinc-700 p-3 rounded-xl text-sm border border-zinc-700 transition active:scale-95">720p HD</button>
+                        <button onclick="download('2160')" class="bg-zinc-800 hover:bg-indigo-600 p-3 rounded-xl text-sm font-bold border border-zinc-700 transition active:scale-95">4K UltraHD</button>
+                        <button onclick="download('max')" class="bg-zinc-800 hover:bg-purple-600 p-3 rounded-xl text-sm font-bold border border-zinc-700 transition active:scale-95">8K / Max</button>
                     </div>
                 </div>
 
-                <button onclick="dl('mp3')" class="w-full bg-indigo-600 hover:bg-indigo-500 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-indigo-500/20">
+                <button onclick="download('mp3')" class="w-full bg-indigo-600 hover:bg-indigo-500 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-indigo-500/20 active:scale-[0.98]">
                     <i class="fa-solid fa-headphones"></i> Download MP3 (High Quality)
                 </button>
             </div>
         </div>
         
         <div class="bg-zinc-950 p-4 text-center border-t border-zinc-800">
-            <div id="status" class="text-[11px] text-zinc-500">Ready to grab. No installation required.</div>
+            <div id="status" class="text-[11px] text-zinc-500 italic transition-all">
+                Siap mengunduh. Tanpa iklan, tanpa redirect.
+            </div>
         </div>
     </div>
 
     <script>
-        function dl(q) {
-            const url = document.getElementById('videoUrl').value;
+        async function download(quality) {
+            const urlInput = document.getElementById('videoUrl').value;
             const status = document.getElementById('status');
 
-            if (!url) { alert("Input link dulu!"); return; }
-
-            status.innerHTML = "<i class='fa-solid fa-circle-notch animate-spin'></i> Menyiapkan tunnel unduhan...";
-            status.classList.add('text-blue-400');
-
-            // Kita gunakan layanan pihak ketiga yang berbeda (Y2Mate / Savefrom helper)
-            // Ini menggunakan URL pola yang lebih stabil
-            let finalUrl = "";
-            
-            if(q === 'mp3') {
-                finalUrl = `https://www.y2mate.com/youtube/${extractID(url)}`;
-            } else {
-                // Untuk resolusi tinggi, kita arahkan ke sistem grabber yang mendukung pilihan manual
-                finalUrl = `https://savefrom.net/?url=${encodeURIComponent(url)}`;
+            if (!urlInput) {
+                alert("Masukkan link YouTube-nya dulu ya!");
+                return;
             }
 
-            // Membuka link di tab baru
-            setTimeout(() => {
-                window.open(finalUrl, '_blank');
-                status.innerText = "Selesai! Ikuti petunjuk di halaman baru.";
-                status.classList.remove('text-blue-400');
-            }, 1000);
+            // Visual feedback
+            status.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Menyiapkan file ${quality === 'mp3' ? 'Audio' : quality + 'p'}...`;
+            status.className = "text-[11px] text-blue-400 font-bold";
+
+            try {
+                const response = await fetch('https://api.cobalt.tools/api/json', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        url: urlInput,
+                        videoQuality: quality === 'mp3' ? '720' : quality,
+                        downloadMode: quality === 'mp3' ? 'audio' : 'video',
+                        filenamePattern: 'pretty'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.url) {
+                    // Trigger download langsung
+                    window.location.href = data.url;
+                    status.innerText = "✅ Unduhan berhasil dimulai!";
+                    status.className = "text-[11px] text-green-400 font-bold";
+                } else {
+                    throw new Error("Gagal mendapatkan link");
+                }
+
+            } catch (error) {
+                console.error(error);
+                status.innerText = "❌ Gagal mengunduh. Pastikan link benar atau coba lagi.";
+                status.className = "text-[11px] text-red-500 font-bold";
+            }
         }
 
-        function extractID(url) {
-            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[7].length == 11) ? match[7] : false;
+        async function pasteLink() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('videoUrl').value = text;
+            } catch (err) {
+                console.log('Gagal mempaste: ', err);
+            }
         }
     </script>
 </body>
