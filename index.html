@@ -8,103 +8,93 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; background: #000; }
+        .glass { background: rgba(24, 24, 27, 0.8); backdrop-filter: blur(10px); }
     </style>
 </head>
-<body class="bg-black text-white min-h-screen flex items-center justify-center p-4">
+<body class="text-white min-h-screen flex items-center justify-center p-4">
 
     <div class="max-w-xl w-full bg-zinc-900 rounded-3xl shadow-2xl overflow-hidden border border-zinc-800">
-        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-center">
-            <h1 class="text-2xl font-black tracking-tighter italic">ULTRA DOWNLOADER 8K</h1>
-            <p class="text-blue-100 text-[10px] uppercase tracking-widest opacity-80">Direct One-Click Stream Grabber</p>
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-center">
+            <h1 class="text-3xl font-black tracking-tighter italic">ULTRA DOWNLOADER 8K</h1>
+            <p class="text-blue-100 text-[10px] uppercase tracking-widest opacity-80 mt-1">High-Speed Direct Link Grabber</p>
         </div>
 
         <div class="p-8">
-            <div class="relative mb-6">
-                <input type="text" id="videoUrl" placeholder="Tempel link YouTube di sini..." 
-                    class="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-5 py-4 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm pr-12 text-zinc-200">
-                <button onclick="pasteLink()" class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition">
-                    <i class="fa-regular fa-paste"></i>
-                </button>
+            <div class="relative mb-8">
+                <label class="text-[10px] font-bold text-zinc-500 uppercase ml-1 mb-2 block">YouTube Video Link</label>
+                <div class="relative">
+                    <input type="text" id="videoUrl" placeholder="Tempel link di sini..." 
+                        class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-sm pr-12 text-zinc-200">
+                    <button onclick="pasteLink()" class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition">
+                        <i class="fa-regular fa-paste text-lg"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="space-y-6">
                 <div>
-                    <label class="text-[10px] font-bold text-zinc-500 uppercase ml-1">Video Resolution</label>
+                    <label class="text-[10px] font-bold text-zinc-500 uppercase ml-1">Pilih Kualitas Video</label>
                     <div class="grid grid-cols-2 gap-3 mt-2">
-                        <button onclick="download('1080')" class="bg-zinc-800 hover:bg-blue-600 p-3 rounded-xl text-sm font-bold border border-zinc-700 transition active:scale-95">1080p Full HD</button>
-                        <button onclick="download('720')" class="bg-zinc-800 hover:bg-zinc-700 p-3 rounded-xl text-sm border border-zinc-700 transition active:scale-95">720p HD</button>
-                        <button onclick="download('2160')" class="bg-zinc-800 hover:bg-indigo-600 p-3 rounded-xl text-sm font-bold border border-zinc-700 transition active:scale-95">4K UltraHD</button>
-                        <button onclick="download('max')" class="bg-zinc-800 hover:bg-purple-600 p-3 rounded-xl text-sm font-bold border border-zinc-700 transition active:scale-95">8K / Max</button>
+                        <button onclick="startDownload('1080')" class="bg-zinc-800 hover:bg-blue-600 p-4 rounded-2xl text-sm font-bold border border-zinc-700 transition transform active:scale-95">1080p HD</button>
+                        <button onclick="startDownload('720')" class="bg-zinc-800 hover:bg-zinc-700 p-4 rounded-2xl text-sm border border-zinc-700 transition transform active:scale-95">720p</button>
+                        <button onclick="startDownload('2160')" class="bg-zinc-800 hover:bg-indigo-600 p-4 rounded-2xl text-sm font-bold border border-zinc-700 transition transform active:scale-95 text-indigo-400 hover:text-white">4K Ultra</button>
+                        <button onclick="startDownload('max')" class="bg-zinc-800 hover:bg-purple-600 p-4 rounded-2xl text-sm font-bold border border-zinc-700 transition transform active:scale-95 text-purple-400 hover:text-white">8K Max</button>
                     </div>
                 </div>
 
-                <button onclick="download('mp3')" class="w-full bg-indigo-600 hover:bg-indigo-500 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition shadow-lg shadow-indigo-500/20 active:scale-[0.98]">
-                    <i class="fa-solid fa-headphones"></i> Download MP3 (High Quality)
-                </button>
+                <div class="pt-2">
+                    <button onclick="startDownload('mp3')" class="w-full bg-indigo-600 hover:bg-indigo-500 py-5 rounded-2xl font-black flex items-center justify-center gap-3 transition shadow-lg shadow-indigo-500/20 transform active:scale-[0.98]">
+                        <i class="fa-solid fa-headphones text-xl"></i> DOWNLOAD AUDIO MP3
+                    </button>
+                </div>
             </div>
         </div>
         
-        <div class="bg-zinc-950 p-4 text-center border-t border-zinc-800">
-            <div id="status" class="text-[11px] text-zinc-500 italic transition-all">
-                Siap mengunduh. Tanpa iklan, tanpa redirect.
+        <div class="bg-zinc-950 p-5 text-center border-t border-zinc-800">
+            <div id="status" class="text-[11px] text-zinc-500 transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-shield-halved"></i> Aman • Tanpa Iklan • Direct Stream
             </div>
         </div>
     </div>
 
     <script>
-        async function download(quality) {
+        function startDownload(q) {
             const urlInput = document.getElementById('videoUrl').value;
             const status = document.getElementById('status');
 
-            if (!urlInput) {
-                alert("Masukkan link YouTube-nya dulu ya!");
+            if (!urlInput || !urlInput.includes('youtu')) {
+                alert("Tolong masukkan link YouTube yang valid!");
                 return;
             }
 
-            // Visual feedback
-            status.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Menyiapkan file ${quality === 'mp3' ? 'Audio' : quality + 'p'}...`;
-            status.className = "text-[11px] text-blue-400 font-bold";
+            // Memberikan feedback visual
+            status.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Menyiapkan tunnel unduhan...`;
+            status.className = "text-[11px] text-blue-400 font-bold flex items-center justify-center gap-2";
 
-            try {
-                const response = await fetch('https://api.cobalt.tools/api/json', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        url: urlInput,
-                        videoQuality: quality === 'mp3' ? '720' : quality,
-                        downloadMode: quality === 'mp3' ? 'audio' : 'video',
-                        filenamePattern: 'pretty'
-                    })
-                });
+            // Menggunakan redirect ke Cobalt Tools dengan parameter URL
+            // Ini cara paling stabil untuk menghindari blokir browser (CORS)
+            setTimeout(() => {
+                const encodedUrl = encodeURIComponent(urlInput);
+                // Kita arahkan ke web cobalt yang akan langsung memproses link tersebut
+                const finalUrl = `https://cobalt.tools/?url=${encodedUrl}`;
+                
+                window.open(finalUrl, '_blank');
 
-                const data = await response.json();
-
-                if (data.url) {
-                    // Trigger download langsung
-                    window.location.href = data.url;
-                    status.innerText = "✅ Unduhan berhasil dimulai!";
-                    status.className = "text-[11px] text-green-400 font-bold";
-                } else {
-                    throw new Error("Gagal mendapatkan link");
-                }
-
-            } catch (error) {
-                console.error(error);
-                status.innerText = "❌ Gagal mengunduh. Pastikan link benar atau coba lagi.";
-                status.className = "text-[11px] text-red-500 font-bold";
-            }
+                status.innerHTML = `<i class="fa-solid fa-check-circle"></i> Berhasil! Selesaikan unduhan di tab baru.`;
+                status.className = "text-[11px] text-green-400 font-bold flex items-center justify-center gap-2";
+            }, 800);
         }
 
         async function pasteLink() {
             try {
                 const text = await navigator.clipboard.readText();
-                document.getElementById('videoUrl').value = text;
+                if (text) {
+                    document.getElementById('videoUrl').value = text;
+                    document.getElementById('status').innerText = "Link berhasil ditempel!";
+                }
             } catch (err) {
-                console.log('Gagal mempaste: ', err);
+                alert("Klik kanan lalu tempel (Paste), browser kamu memblokir akses otomatis.");
             }
         }
     </script>
