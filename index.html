@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UltraHD 8K Downloader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-xl w-full bg-slate-800 rounded-3xl shadow-2xl overflow-hidden border border-slate-700">
+        <div class="bg-gradient-to-r from-red-600 to-rose-500 p-6 text-center">
+            <h1 class="text-2xl font-black uppercase tracking-tighter">YouTube 8K Pro</h1>
+            <p class="text-red-100 text-xs">High Resolution Video & Audio Extractor</p>
+        </div>
+
+        <div class="p-8">
+            <div class="relative mb-6">
+                <input type="text" id="videoUrl" placeholder="Tempel link video YouTube di sini..." 
+                    class="w-full bg-slate-700 border-2 border-slate-600 rounded-xl px-5 py-4 focus:border-red-500 focus:outline-none transition-all text-sm">
+                <i class="fa-brands py-4 px-5 fa-youtube absolute right-0 top-0 text-red-500 text-xl"></i>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4">
+                <div class="bg-slate-700/50 p-4 rounded-xl border border-slate-600">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Video Quality</span>
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        <button onclick="process('8k')" class="bg-slate-600 hover:bg-red-600 py-2 rounded-lg text-sm font-bold transition">8K Ultra HD</button>
+                        <button onclick="process('4k')" class="bg-slate-600 hover:bg-red-600 py-2 rounded-lg text-sm font-bold transition">4K Ultra HD</button>
+                        <button onclick="process('1080')" class="bg-slate-600 hover:bg-slate-500 py-2 rounded-lg text-sm transition">1080p Full HD</button>
+                        <button onclick="process('720')" class="bg-slate-600 hover:bg-slate-500 py-2 rounded-lg text-sm transition">720p HD</button>
+                    </div>
+                </div>
+
+                <button onclick="process('mp3')" class="w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition">
+                    <i class="fa-solid fa-music"></i> Download Audio (320kbps)
+                </button>
+            </div>
+
+            <div id="statusBox" class="hidden mt-6 p-4 rounded-xl text-center text-sm animate-pulse">
+                <div id="loader" class="mb-2 mx-auto w-6 h-6 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                <span id="statusText">Menghubungkan ke server 8K...</span>
+            </div>
+        </div>
+        
+        <div class="bg-slate-900/50 p-4 text-center">
+            <p class="text-[10px] text-slate-500 font-mono">Status Server: <span class="text-emerald-500">Online</span> | Encoder: AV1/VP9 Supported</p>
+        </div>
+    </div>
+
+    <script>
+        function process(quality) {
+            const url = document.getElementById('videoUrl').value;
+            const statusBox = document.getElementById('statusBox');
+            const statusText = document.getElementById('statusText');
+
+            if (!url) {
+                alert("Masukkan URL terlebih dahulu!");
+                return;
+            }
+
+            const id = extractID(url);
+            if (!id) {
+                alert("URL tidak valid!");
+                return;
+            }
+
+            statusBox.classList.remove('hidden');
+            statusBox.className = "mt-6 p-4 rounded-xl text-center text-sm bg-slate-700 text-slate-300";
+            
+            // Simulasi proses pencarian stream
+            setTimeout(() => {
+                // Menggunakan Loader.to atau SaveFrom API untuk kualitas tinggi
+                // Catatan: Kualitas 8K sangat tergantung apakah video aslinya mendukung 8K
+                let targetUrl = "";
+                
+                if (quality === 'mp3') {
+                    targetUrl = `https://loader.to/api/button/?url=${url}&f=mp3`;
+                } else {
+                    // API loader.to mendukung parameter format untuk resolusi tinggi
+                    const formatMap = {
+                        '8k': '8k',
+                        '4k': '4k',
+                        '1080': '1080',
+                        '720': '720'
+                    };
+                    targetUrl = `https://loader.to/api/button/?url=${url}&f=${formatMap[quality]}`;
+                }
+
+                window.open(targetUrl, '_blank');
+                statusText.innerText = "Selesai! Tab baru telah dibuka untuk proses download.";
+            }, 2000);
+        }
+
+        function extractID(url) {
+            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[7].length == 11) ? match[7] : false;
+        }
+    </script>
+</body>
+</html>
